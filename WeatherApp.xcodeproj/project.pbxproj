@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		603AF0A12A2291F900A7E486 /* URLSessionHTTPClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 603AF0A02A2291F900A7E486 /* URLSessionHTTPClientTests.swift */; };
 		6083D3B72A224E06005FEC6E /* RemoteWeatherLoaderUseCaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6083D3B62A224E06005FEC6E /* RemoteWeatherLoaderUseCaseTests.swift */; };
 		60E7EBF92A1FA79300C8F53C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60E7EBF82A1FA79300C8F53C /* AppDelegate.swift */; };
 		60E7EBFB2A1FA79300C8F53C /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60E7EBFA2A1FA79300C8F53C /* SceneDelegate.swift */; };
@@ -42,6 +43,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		603AF0A02A2291F900A7E486 /* URLSessionHTTPClientTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLSessionHTTPClientTests.swift; sourceTree = "<group>"; };
 		6083D3B62A224E06005FEC6E /* RemoteWeatherLoaderUseCaseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteWeatherLoaderUseCaseTests.swift; sourceTree = "<group>"; };
 		60E7EBF52A1FA79300C8F53C /* WeatherApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WeatherApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		60E7EBF82A1FA79300C8F53C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -126,6 +128,7 @@
 			isa = PBXGroup;
 			children = (
 				6083D3B62A224E06005FEC6E /* RemoteWeatherLoaderUseCaseTests.swift */,
+				603AF0A02A2291F900A7E486 /* URLSessionHTTPClientTests.swift */,
 			);
 			path = WeatherAPITests;
 			sourceTree = "<group>";
@@ -309,6 +312,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				6083D3B72A224E06005FEC6E /* RemoteWeatherLoaderUseCaseTests.swift in Sources */,
+				603AF0A12A2291F900A7E486 /* URLSessionHTTPClientTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
