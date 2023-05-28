@@ -17,8 +17,7 @@ final class CoreDataWeatherStore: WeatherStore {
     }
     
     func retrieve(completion: @escaping RetrievalCompletion) {
-        let context = self.context
-        context.perform {
+        perform { context in
             do {
                 let request = NSFetchRequest<ManagedCache>(entityName: ManagedCache.entity().name!)
                 request.returnsObjectsAsFaults = false
@@ -34,8 +33,7 @@ final class CoreDataWeatherStore: WeatherStore {
     }
     
     func insert(_ weather: [LocalWeatherItem], completion: @escaping InsertionCompletion) {
-        let context = self.context
-        context.perform {
+        perform { context in
             do {
                 let managedCache = ManagedCache(context: context)
                 managedCache.history = ManagedWeatherItem.items(from: weather, in: context)
@@ -49,8 +47,7 @@ final class CoreDataWeatherStore: WeatherStore {
     }
     
     func deleteCachedWeather(completion: @escaping DeletionCompletion) {
-        let context = self.context
-        context.perform {
+        perform { context in
             do {
                 try ManagedCache.find(in: context).map(context.delete).map(context.save)
                 completion(nil)
@@ -59,35 +56,9 @@ final class CoreDataWeatherStore: WeatherStore {
             }
         }
     }
-}
-
-private extension NSPersistentContainer {
-    enum LoadingError: Error {
-        case modelNotFound
-        case failedToLoadPersistentStores(Error)
-    }
-
-    static func load(modelName name: String, url: URL, in bundle: Bundle) throws -> NSPersistentContainer {
-        guard let model = NSManagedObjectModel.with(name: name, in: bundle) else {
-            throw LoadingError.modelNotFound
-        }
-        
-        let description = NSPersistentStoreDescription(url: url)
-        let container = NSPersistentContainer(name: name, managedObjectModel: model)
-        container.persistentStoreDescriptions = [description]
-
-        var loadError: Swift.Error?
-        container.loadPersistentStores { loadError = $1 }
-        try loadError.map { throw LoadingError.failedToLoadPersistentStores($0) }
-        
-        return container
-    }
-}
-
-private extension NSManagedObjectModel {
-    static func with(name: String, in bundle: Bundle) -> NSManagedObjectModel? {
-        return bundle
-            .url(forResource: name, withExtension: "momd")
-            .flatMap { NSManagedObjectModel(contentsOf: $0) }
+    
+    private func perform(_ action: @escaping (NSManagedObjectContext) -> Void) {
+        let context = self.context
+        context.perform { action(context) }
     }
 }

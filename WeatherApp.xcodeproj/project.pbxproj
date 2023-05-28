@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		60356DA72A23E2CE00521ADA /* CoreDataHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60356DA62A23E2CE00521ADA /* CoreDataHelpers.swift */; };
 		603AF0A12A2291F900A7E486 /* URLSessionHTTPClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 603AF0A02A2291F900A7E486 /* URLSessionHTTPClientTests.swift */; };
 		603AF0AC2A237DA400A7E486 /* WeatherStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 603AF0AB2A237DA400A7E486 /* WeatherStore.swift */; };
 		603AF0AE2A237DE500A7E486 /* LocalWeatherItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 603AF0AD2A237DE500A7E486 /* LocalWeatherItem.swift */; };
@@ -51,6 +52,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		60356DA62A23E2CE00521ADA /* CoreDataHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataHelpers.swift; sourceTree = "<group>"; };
 		603AF0A02A2291F900A7E486 /* URLSessionHTTPClientTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLSessionHTTPClientTests.swift; sourceTree = "<group>"; };
 		603AF0AB2A237DA400A7E486 /* WeatherStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherStore.swift; sourceTree = "<group>"; };
 		603AF0AD2A237DE500A7E486 /* LocalWeatherItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalWeatherItem.swift; sourceTree = "<group>"; };
@@ -111,6 +113,7 @@
 			children = (
 				603AF0AB2A237DA400A7E486 /* WeatherStore.swift */,
 				603AF0AF2A237EBB00A7E486 /* CoreDataWeatherStore.swift */,
+				60356DA62A23E2CE00521ADA /* CoreDataHelpers.swift */,
 				603AF0AD2A237DE500A7E486 /* LocalWeatherItem.swift */,
 				603AF0B52A2385BF00A7E486 /* ManagedObjects */,
 				60E7EC012A1FA79300C8F53C /* CDWeatherModel.xcdatamodeld */,
@@ -340,6 +343,7 @@
 				603AF0CC2A2388D200A7E486 /* ManagedWeatherItem+CoreDataClass.swift in Sources */,
 				60E7EC032A1FA79300C8F53C /* CDWeatherModel.xcdatamodeld in Sources */,
 				60E7EC322A1FCBCF00C8F53C /* HTTPClient.swift in Sources */,
+				60356DA72A23E2CE00521ADA /* CoreDataHelpers.swift in Sources */,
 				603AF0B02A237EBB00A7E486 /* CoreDataWeatherStore.swift in Sources */,
 				603AF0AE2A237DE500A7E486 /* LocalWeatherItem.swift in Sources */,
 				603AF0D12A2389B200A7E486 /* ManagedCache+CoreDataProperties.swift in Sources */,

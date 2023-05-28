@@ -21,6 +21,10 @@ extension ManagedWeatherItem {
     @NSManaged public var temperature: Double
     @NSManaged public var unit: String
     
+    var local: LocalWeatherItem {
+        return LocalWeatherItem(city: city, temperature: temperature, unit: unit, date: date)
+    }
+    
     static func items(from localWeather: [LocalWeatherItem], in context: NSManagedObjectContext) -> NSOrderedSet {
         return NSOrderedSet(array: localWeather.map { local in
             let managed = ManagedWeatherItem(context: context)
@@ -30,10 +34,6 @@ extension ManagedWeatherItem {
             managed.date = local.date
             return managed
         })
-    }
-    
-    var local: LocalWeatherItem {
-        return LocalWeatherItem(city: city, temperature: temperature, unit: unit, date: date)
     }
 }
 
