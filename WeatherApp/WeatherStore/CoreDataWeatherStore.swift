@@ -9,9 +9,11 @@ import CoreData
 
 final class CoreDataWeatherStore: WeatherStore {
     private let container: NSPersistentContainer
-    
-    init(bundle: Bundle = .main) throws {
+    private let context: NSManagedObjectContext
+
+    public init(bundle: Bundle = .main) throws {
         container = try NSPersistentContainer.load(modelName: "CDWeatherModel", in: bundle)
+        context = container.newBackgroundContext()
     }
     
     func retrieve(completion: @escaping RetrievalCompletion) {
