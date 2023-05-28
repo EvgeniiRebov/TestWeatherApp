@@ -22,12 +22,8 @@ final class CoreDataWeatherStore: WeatherStore {
             do {
                 let request = NSFetchRequest<ManagedCache>(entityName: ManagedCache.entity().name!)
                 request.returnsObjectsAsFaults = false
-                if let cache = try context.fetch(request).first {
-                    completion(.found(
-                        weather: cache.history
-                            .compactMap { ($0 as? ManagedWeatherItem) }
-                            .map { LocalWeatherItem(city: $0.city, temperature: $0.temperature, unit: $0.unit, date: $0.date) }
-                    ))
+                if let cache = try ManagedCache.find(in: context) {
+                    completion(.found(weather: cache.localHistory))
                 } else {
                     completion(.empty)
                 }
@@ -42,14 +38,7 @@ final class CoreDataWeatherStore: WeatherStore {
         context.perform {
             do {
                 let managedCache = ManagedCache(context: context)
-                managedCache.history = NSOrderedSet(array: weather.map { local in
-                    let managed = ManagedWeatherItem(context: context)
-                    managed.city = local.city
-                    managed.temperature = local.temperature
-                    managed.unit = local.unit
-                    managed.date = local.date
-                    return managed
-                })
+                managedCache.history = ManagedWeatherItem.items(from: weather, in: context)
 
                 try context.save()
                 completion(nil)

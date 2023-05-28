@@ -18,6 +18,15 @@ extension ManagedCache {
 
     @NSManaged public var history: NSOrderedSet
 
+    var localHistory: [LocalWeatherItem] {
+        return history.compactMap { ($0 as? ManagedWeatherItem)?.local }
+    }
+    
+    static func find(in context: NSManagedObjectContext) throws -> ManagedCache? {
+        let request = NSFetchRequest<ManagedCache>(entityName: entity().name!)
+        request.returnsObjectsAsFaults = false
+        return try context.fetch(request).first
+    }
 }
 
 extension ManagedCache : Identifiable {
