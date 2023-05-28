@@ -28,6 +28,45 @@ class CoreDataWeatherStoreTests: XCTestCase {
         
         expect(sut, toRetrieve: .found(weather: history))
     }
+    
+    func test_retrieve_hasNoSideEffectsOnNonEmptyCache() {
+        let sut = makeSUT()
+        let history = uniqueWeatherHistory()
+        
+        insert(history, to: sut)
+        
+        expect(sut, toRetrieveTwice: .found(weather: history))
+    }
+    
+    func test_insert_deliversNoErrorOnEmptyCache() {
+        let sut = makeSUT()
+
+        let insertionError = insert(uniqueWeatherHistory(), to: sut)
+        
+        XCTAssertNil(insertionError, "Expected to insert cache successfully")
+    }
+
+    func test_insert_deliversNoErrorOnNonEmptyCache() {
+        let sut = makeSUT()
+        
+        insert(uniqueWeatherHistory(), to: sut)
+        
+        let insertionError = insert(uniqueWeatherHistory(), to: sut)
+
+        XCTAssertNil(insertionError, "Expected to override cache successfully")
+    }
+
+    func test_insert_overridesPreviouslyInsertedCacheValues() {
+        let sut = makeSUT()
+
+        insert(uniqueWeatherHistory(), to: sut)
+        
+        let latestHistory = uniqueWeatherHistory()
+        insert(uniqueWeatherHistory(), to: sut)
+        
+        expect(sut, toRetrieve: .found(weather: latestHistory))
+    }
+
 
     // - MARK: Helpers
     

@@ -49,9 +49,8 @@ final class CoreDataWeatherStore: WeatherStore {
     }
     
     func deleteCachedWeather(completion: @escaping DeletionCompletion) {
-        
+
     }
-    
 }
 
 private extension NSPersistentContainer {
