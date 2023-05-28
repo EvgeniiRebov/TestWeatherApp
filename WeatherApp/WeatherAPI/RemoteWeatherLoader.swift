@@ -48,6 +48,6 @@ class RemoteWeatherLoader: WeatherLoader {
 
 private extension RemoteWeatherItem {
      func toModelsArray() -> [WeatherItem] {
-        return [WeatherItem(city: city, temp: temp)]
+         return [WeatherItem(city: city, temperature: temperature, unit: unit, date: date)]
     }
 }
