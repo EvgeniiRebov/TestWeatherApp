@@ -24,7 +24,8 @@ class CoreDataWeatherStoreTests: XCTestCase {
     
     private func makeSUT(file: StaticString = #file, line: UInt = #line) -> WeatherStore {
         let storeBundle = Bundle(for: CoreDataWeatherStore.self)
-        let sut = try! CoreDataWeatherStore(bundle: storeBundle)
+        let storeURL = URL(fileURLWithPath: "/dev/null")
+        let sut = try! CoreDataWeatherStore(storeURL: storeURL, bundle: storeBundle)
         trackForMemoryLeaks(sut, file: file, line: line)
         return sut
     }
