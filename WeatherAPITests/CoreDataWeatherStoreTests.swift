@@ -67,6 +67,39 @@ class CoreDataWeatherStoreTests: XCTestCase {
         expect(sut, toRetrieve: .found(weather: latestHistory))
     }
 
+    func test_delete_deliversNoErrorOnEmptyCache() {
+        let sut = makeSUT()
+
+        let deletionError = deleteCache(from: sut)
+        
+        XCTAssertNil(deletionError, "Expected empty cache deletion to succeed")
+    }
+
+    func test_delete_hasNoSideEffectsOnEmptyCache() {
+        let sut = makeSUT()
+
+        deleteCache(from: sut)
+        
+        expect(sut, toRetrieve: .empty)
+    }
+
+    func test_delete_deliversNoErrorOnNonEmptyCache() {
+        let sut = makeSUT()
+
+        insert(uniqueWeatherHistory(), to: sut)
+        let deletionError = deleteCache(from: sut)
+        
+        XCTAssertNil(deletionError, "Expected non-empty cache deletion to succeed")
+    }
+
+    func test_delete_emptiesPreviouslyInsertedCache() {
+        let sut = makeSUT()
+
+        insert(uniqueWeatherHistory(), to: sut)
+        deleteCache(from: sut)
+        
+        expect(sut, toRetrieve: .empty)
+    }
 
     // - MARK: Helpers
     
@@ -88,6 +121,18 @@ class CoreDataWeatherStoreTests: XCTestCase {
         }
         wait(for: [exp], timeout: 1.0)
         return insertionError
+    }
+    
+    @discardableResult
+    func deleteCache(from sut: WeatherStore) -> Error? {
+        let exp = expectation(description: "Wait for cache deletion")
+        var deletionError: Error?
+        sut.deleteCachedWeather() { receivedDeletionError in
+            deletionError = receivedDeletionError
+            exp.fulfill()
+        }
+        wait(for: [exp], timeout: 1.0)
+        return deletionError
     }
     
     func expect(_ sut: WeatherStore, toRetrieveTwice expectedResult: RetrieveCachedWeatherResult, file: StaticString = #file, line: UInt = #line) {

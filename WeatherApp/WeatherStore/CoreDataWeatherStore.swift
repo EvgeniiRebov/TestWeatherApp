@@ -49,7 +49,15 @@ final class CoreDataWeatherStore: WeatherStore {
     }
     
     func deleteCachedWeather(completion: @escaping DeletionCompletion) {
-
+        let context = self.context
+        context.perform {
+            do {
+                try ManagedCache.find(in: context).map(context.delete).map(context.save)
+                completion(nil)
+            } catch {
+                completion(error)
+            }
+        }
     }
 }
 
