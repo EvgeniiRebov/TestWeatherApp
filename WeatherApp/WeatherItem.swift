@@ -8,6 +8,8 @@
 import Foundation
 
 struct WeatherItem: Equatable {
-    let city: String
-    let temp: String
+    var city: String
+    var temperature: Double
+    var unit: String
+    var date: String
 }

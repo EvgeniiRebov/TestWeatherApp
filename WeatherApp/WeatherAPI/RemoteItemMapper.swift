@@ -8,8 +8,10 @@
 import Foundation
 
 struct RemoteWeatherItem: Decodable {
-    let city: String
-    let temp: String
+    var city: String
+    var temperature: Double
+    var unit: String
+    var date: String
 }
 
 final class RemoteItemMapper {
