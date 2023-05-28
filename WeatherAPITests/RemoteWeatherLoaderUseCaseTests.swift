@@ -119,9 +119,7 @@ class RemoteWeatherLoaderUseCaseTests: XCTestCase {
                           temperature: Double,
                           unit: String = "F",
                           date: Date = Date()) -> (model: WeatherItem, json: [String: Any]) {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "dd.MM.yyyy HH:mm:ss"
-        let stringDate = formatter.string(from: date)
+        let stringDate = testFormatter().string(from: date)
         let item = WeatherItem(city: city, temperature: temperature, unit: unit, date: stringDate)
         
         let json = [

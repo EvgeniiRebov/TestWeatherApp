@@ -17,11 +17,46 @@ final class CoreDataWeatherStore: WeatherStore {
     }
     
     func retrieve(completion: @escaping RetrievalCompletion) {
-        completion(.empty)
+        let context = self.context
+        context.perform {
+            do {
+                let request = NSFetchRequest<ManagedCache>(entityName: ManagedCache.entity().name!)
+                request.returnsObjectsAsFaults = false
+                if let cache = try context.fetch(request).first {
+                    completion(.found(
+                        weather: cache.history
+                            .compactMap { ($0 as? ManagedWeatherItem) }
+                            .map { LocalWeatherItem(city: $0.city, temperature: $0.temperature, unit: $0.unit, date: $0.date) }
+                    ))
+                } else {
+                    completion(.empty)
+                }
+            } catch {
+                completion(.failure(error))
+            }
+        }
     }
     
     func insert(_ weather: [LocalWeatherItem], completion: @escaping InsertionCompletion) {
-        
+        let context = self.context
+        context.perform {
+            do {
+                let managedCache = ManagedCache(context: context)
+                managedCache.history = NSOrderedSet(array: weather.map { local in
+                    let managed = ManagedWeatherItem(context: context)
+                    managed.city = local.city
+                    managed.temperature = local.temperature
+                    managed.unit = local.unit
+                    managed.date = local.date
+                    return managed
+                })
+
+                try context.save()
+                completion(nil)
+            } catch {
+                completion(error)
+            }
+        }
     }
     
     func deleteCachedWeather(completion: @escaping DeletionCompletion) {
