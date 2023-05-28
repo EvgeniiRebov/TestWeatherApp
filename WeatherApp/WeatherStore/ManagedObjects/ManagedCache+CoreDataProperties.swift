@@ -16,7 +16,7 @@ extension ManagedCache {
         return NSFetchRequest<ManagedCache>(entityName: "ManagedCache")
     }
 
-    @NSManaged public var history: NSOrderedSet?
+    @NSManaged public var history: NSOrderedSet
 
 }
 

@@ -16,10 +16,10 @@ extension ManagedWeatherItem {
         return NSFetchRequest<ManagedWeatherItem>(entityName: "ManagedWeatherItem")
     }
 
-    @NSManaged public var city: String?
-    @NSManaged public var date: Date?
+    @NSManaged public var city: String
+    @NSManaged public var date: Date
     @NSManaged public var temperature: Double
-    @NSManaged public var unit: String?
+    @NSManaged public var unit: String
 
 }
 
