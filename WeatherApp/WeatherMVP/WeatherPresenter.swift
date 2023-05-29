@@ -20,7 +20,7 @@ class WeatherPresenter: PresenterProtocol {
     }
 
     func requestWithLocation() {
-        view?.reloadData([WeatherItem(city: "Moscow", temperature: 23, unit: "C", date: "21.04.2023 21:43:14")])
+        view?.reloadData([WeatherItem(city: "Moscow", temperature: 26, unit: "C", date: "21.04.2023 21:43:14")])
     }
     
     func requestWith(cityName: String) {
