@@ -88,6 +88,7 @@ extension WeatherViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: Constants.cellId) as? HistoryCell else { return UITableViewCell() }
         cell.selectionStyle = .none
+        cell.configure(history[indexPath.row])
         return cell
     }
 }
