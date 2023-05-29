@@ -127,11 +127,11 @@
 		60356DA82A24FCCE00521ADA /* WeatherMVP */ = {
 			isa = PBXGroup;
 			children = (
+				60356DBC2A25269C00521ADA /* WeatherComposer.swift */,
 				60E7EBFC2A1FA79300C8F53C /* WeatherViewController.swift */,
 				60356DA92A24FCEA00521ADA /* WeatherPresenter.swift */,
 				60E7EC3B2A1FD1C700C8F53C /* WeatherItem.swift */,
 				60356DC12A25277F00521ADA /* Views */,
-				60356DBC2A25269C00521ADA /* WeatherComposer.swift */,
 			);
 			path = WeatherMVP;
 			sourceTree = "<group>";

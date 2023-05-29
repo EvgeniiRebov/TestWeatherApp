@@ -9,6 +9,7 @@ import UIKit
 
 protocol ViewProtocol: AnyObject {
     func reloadData(_ history: [WeatherItem])
+    func reloadData(_ newItem: WeatherItem)
 }
 
 class WeatherViewController: UIViewController, ViewProtocol {
@@ -79,6 +80,12 @@ class WeatherViewController: UIViewController, ViewProtocol {
     
     func reloadData(_ history: [WeatherItem]) {
         self.history = history
+        infoView.configure(history.first)
+        tableView.reloadData()
+    }
+    
+    func reloadData(_ newItem: WeatherItem) {
+        history.insert(newItem, at: 0)
         infoView.configure(history.first)
         tableView.reloadData()
     }
