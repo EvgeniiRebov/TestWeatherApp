@@ -1,0 +1,10 @@
+/* 
+  Localizable.strings
+  WeatherApp
+
+  Created by Evgenii Rebov on 29.05.2023.
+  
+*/
+
+"Weather.Title" = "Weather";
+"Search.Placeholder" = "City name";
