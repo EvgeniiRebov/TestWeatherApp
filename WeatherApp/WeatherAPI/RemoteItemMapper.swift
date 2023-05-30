@@ -8,18 +8,31 @@
 import Foundation
 
 struct RemoteWeatherItem: Decodable {
-    var city: String
-    var temperature: Double
-    var unit: String
-    var date: String
+    struct MainTemperature: Decodable {
+        let temp: Double
+    }
+    
+    let city: String
+    let main: MainTemperature
+    
+    enum CodingKeys: String, CodingKey {
+        case city = "name"
+        case main
+    }
 }
 
 final class RemoteItemMapper {
     static func map(_ data: Data, from response: HTTPURLResponse) throws -> RemoteWeatherItem {
-        guard response.statusCode == 200,
-              let item = try? JSONDecoder().decode(RemoteWeatherItem.self, from: data) else {
+        if response.statusCode == 200 {
+            do {
+                let item = try JSONDecoder().decode(RemoteWeatherItem.self, from: data)
+                return item
+            } catch {
+                print(error)
+                throw RemoteWeatherLoader.NetworkError.invalidData
+            }
+        } else {
             throw RemoteWeatherLoader.NetworkError.invalidData
         }
-        return item
     }
 }

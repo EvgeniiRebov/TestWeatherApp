@@ -191,12 +191,6 @@ class CoreDataWeatherStoreTests: XCTestCase {
     }
 }
 
-func testFormatter() -> DateFormatter {
-    let formatter = DateFormatter()
-    formatter.dateFormat = "dd.MM.yyyy HH:mm:ss"
-    return formatter
-}
-
 func uniqueWeather(in city: String) -> WeatherItem {
     return WeatherItem(city: city, temperature: 24, unit: "F", date: "03.04.2023 12:43:24")
 }
@@ -206,6 +200,6 @@ func uniqueWeatherHistory() -> [LocalWeatherItem] {
     let local = models.map { LocalWeatherItem(city: $0.city,
                                               temperature: $0.temperature,
                                               unit: $0.unit,
-                                              date: testFormatter().date(from: $0.date) ?? Date()) }
+                                              date: DateFormatter.mainFormatter().date(from: $0.date) ?? Date()) }
     return local
 }

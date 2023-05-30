@@ -11,12 +11,17 @@ enum URLFactory {
     private static let key = "872299f35680fe2abfbf46a4154275b5"
     private static let baseUrl = "https://api.openweathermap.org/data/2.5/weather"
     
+    private static let commonQuery = [
+        URLQueryItem(name: "units", value: "Imperial"),
+        URLQueryItem(name: "appid", value: key)
+    ]
+    
     static func urlWithCityName(_ name: String) -> URL? {
         var url = URLComponents(string: baseUrl)
         url?.queryItems = [
-            URLQueryItem(name: "q", value: name),
-            URLQueryItem(name: "appid", value: key)
+            URLQueryItem(name: "q", value: name)
         ]
+        url?.queryItems?.append(contentsOf: commonQuery)
         return url?.url
     }
     
@@ -25,8 +30,8 @@ enum URLFactory {
         url?.queryItems = [
             URLQueryItem(name: "lat", value: lat),
             URLQueryItem(name: "lon", value: lon),
-            URLQueryItem(name: "appid", value: key)
         ]
+        url?.queryItems?.append(contentsOf: commonQuery)
         return url?.url
     }
 }
