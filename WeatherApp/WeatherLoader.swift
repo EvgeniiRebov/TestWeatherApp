@@ -12,3 +12,10 @@ protocol WeatherLoader {
     
     func load(completion: @escaping (Result) -> Void)
 }
+
+protocol RemoteLoader {
+    typealias Result = Swift.Result<WeatherItem, Error>
+    
+    func requestWithLocation(lat: String, long: String, completion: @escaping (Result) -> Void)
+    func requestWith(_ cityName: String, completion: @escaping (Result) -> Void)
+}

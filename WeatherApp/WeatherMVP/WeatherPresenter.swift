@@ -15,15 +15,43 @@ protocol PresenterProtocol {
 
 class WeatherPresenter: PresenterProtocol {
     weak var view: ViewProtocol?
+    var remoteLoader: RemoteLoader?
+    var localLoader: WeatherLoader?
+    
     func viewDidLoad() {
-        view?.reloadData([WeatherItem(city: "Moscow", temperature: 26, unit: "C", date: "21.04.2023 21:43:14")])
-
+        localLoader?.load(completion: { [weak self] result in
+            guard let self = self else { return }
+            switch result {
+            case let .success(history):
+                self.view?.reloadData(history)
+            case let .failure(error):
+                print(error)
+                self.view?.showAlert()
+            }
+        })
     }
 
     func requestWithLocation() {
-        view?.reloadData(WeatherItem(city: "New-York", temperature: 14, unit: "C", date: "21.04.2023 21:43:14"))
+        remoteLoader?.requestWithLocation(lat: "", long: "") { [weak self] result in
+            guard let self = self else { return }
+            self.handleRemote(result)
+        }
     }
     
     func requestWith(cityName: String) {
+        remoteLoader?.requestWith(cityName) { [weak self] result in
+            guard let self = self else { return }
+            self.handleRemote(result)
+        }
+    }
+    
+    private func handleRemote(_ result: RemoteLoader.Result) {
+        switch result {
+        case let .success(model):
+            view?.reloadData(model)
+        case let .failure(error):
+            print(error)
+            self.view?.showAlert()
+        }
     }
 }
