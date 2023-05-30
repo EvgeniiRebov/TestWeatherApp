@@ -6,7 +6,7 @@
 //
 
 import Foundation
-
+    
 protocol PresenterProtocol {
     func viewDidLoad()
     func requestWithLocation()
@@ -15,8 +15,12 @@ protocol PresenterProtocol {
 
 class WeatherPresenter: PresenterProtocol {
     weak var view: ViewProtocol?
-    var remoteLoader: RemoteLoader?
+    let remoteLoader: RemoteLoader
     var localLoader: WeatherLoader?
+    
+    init(remoteLoader: RemoteLoader) {
+        self.remoteLoader = remoteLoader
+    }
     
     func viewDidLoad() {
         localLoader?.load(completion: { [weak self] result in
@@ -32,14 +36,22 @@ class WeatherPresenter: PresenterProtocol {
     }
 
     func requestWithLocation() {
-        remoteLoader?.requestWithLocation(lat: "", long: "") { [weak self] result in
+        guard let url = URLFactory.urlWithCoordinate(lat: "", lon: "") else {
+            view?.showAlert()
+            return
+        }
+        remoteLoader.load(url: url) { [weak self] result in
             guard let self = self else { return }
             self.handleRemote(result)
         }
     }
     
     func requestWith(cityName: String) {
-        remoteLoader?.requestWith(cityName) { [weak self] result in
+        guard let url = URLFactory.urlWithCityName(cityName) else {
+            view?.showAlert()
+            return
+        }
+        remoteLoader.load(url: url) { [weak self] result in
             guard let self = self else { return }
             self.handleRemote(result)
         }

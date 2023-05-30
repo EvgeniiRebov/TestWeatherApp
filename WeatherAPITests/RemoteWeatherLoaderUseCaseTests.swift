@@ -18,19 +18,19 @@ class RemoteWeatherLoaderUseCaseTests: XCTestCase {
     
     func test_load_requestsDataFromURL() {
         let url = URL(string: "https://a-given-url.com")!
-        let (sut, client) = makeSUT(url: url)
+        let (sut, client) = makeSUT()
 
-        sut.load { _ in }
+        sut.load(url: url) { _ in }
 
         XCTAssertEqual(client.requestedURLs, [url])
     }
 
     func test_loadTwice_requestsDataFromURLTwice() {
         let url = URL(string: "https://a-given-url.com")!
-        let (sut, client) = makeSUT(url: url)
+        let (sut, client) = makeSUT()
 
-        sut.load { _ in }
-        sut.load { _ in }
+        sut.load(url: url) { _ in }
+        sut.load(url: url) { _ in }
 
         XCTAssertEqual(client.requestedURLs, [url, url])
     }
@@ -81,7 +81,7 @@ class RemoteWeatherLoaderUseCaseTests: XCTestCase {
         let item = makeItem(city: "Moscow", temperature: 25)
 
 
-        expect(sut, toCompleteWith: .success([item.model]), when: {
+        expect(sut, toCompleteWith: .success(item.model), when: {
             let json = makeItemJSON(item.json)
             client.complete(withStatusCode: 200, data: json)
         })
@@ -90,10 +90,10 @@ class RemoteWeatherLoaderUseCaseTests: XCTestCase {
     func test_load_doesNotDeliverResultAfterSUTInstanceHasBeenDeallocated() {
         let url = URL(string: "http://any-url.com")!
         let client = HTTPClientSpy()
-        var sut: RemoteWeatherLoader? = RemoteWeatherLoader(url: url, client: client)
+        var sut: RemoteWeatherLoader? = RemoteWeatherLoader(client: client)
 
         var capturedResults = [RemoteWeatherLoader.Result]()
-        sut?.load { capturedResults.append($0) }
+        sut?.load(url: url) { capturedResults.append($0) }
 
         sut = nil
         client.complete(withStatusCode: 200, data: makeItemJSON([:]))
@@ -103,9 +103,9 @@ class RemoteWeatherLoaderUseCaseTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private func makeSUT(url: URL = URL(string: "https://a-url.com")!, file: StaticString = #file, line: UInt = #line) -> (sut: RemoteWeatherLoader, client: HTTPClientSpy) {
+    private func makeSUT(file: StaticString = #file, line: UInt = #line) -> (sut: RemoteWeatherLoader, client: HTTPClientSpy) {
         let client = HTTPClientSpy()
-        let sut = RemoteWeatherLoader(url: url, client: client)
+        let sut = RemoteWeatherLoader(client: client)
         trackForMemoryLeaks(sut, file: file, line: line)
         trackForMemoryLeaks(client, file: file, line: line)
         return (sut, client)
@@ -136,10 +136,15 @@ class RemoteWeatherLoaderUseCaseTests: XCTestCase {
         return try! JSONSerialization.data(withJSONObject: item)
     }
     
-    private func expect(_ sut: RemoteWeatherLoader, toCompleteWith expectedResult: RemoteWeatherLoader.Result, when action: () -> Void, file: StaticString = #file, line: UInt = #line) {
+    private func expect(_ sut: RemoteWeatherLoader,
+                        url: URL = URL(string: "https://a-url.com")!,
+                        toCompleteWith expectedResult: RemoteWeatherLoader.Result,
+                        when action: () -> Void,
+                        file: StaticString = #file,
+                        line: UInt = #line) {
         let exp = expectation(description: "Wait for load completion")
         
-        sut.load { receivedResult in
+        sut.load(url: url) { receivedResult in
             switch (receivedResult, expectedResult) {
             case let (.success(receivedItems), .success(expectedItems)):
                 XCTAssertEqual(receivedItems, expectedItems, file: file, line: line)

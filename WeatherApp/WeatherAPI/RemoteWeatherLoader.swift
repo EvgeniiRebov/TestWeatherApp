@@ -7,8 +7,7 @@
 
 import Foundation
 
-class RemoteWeatherLoader: WeatherLoader {
-    private let url: URL
+class RemoteWeatherLoader: RemoteLoader {
     private let client: HTTPClient
     
     enum NetworkError: Error {
@@ -17,16 +16,15 @@ class RemoteWeatherLoader: WeatherLoader {
         case unexpectedValues
     }
     
-    typealias Result = WeatherLoader.Result
+    typealias Result = RemoteLoader.Result
     
-    init(url: URL, client: HTTPClient) {
-        self.url = url
+    init(client: HTTPClient) {
         self.client = client
     }
     
-    func load(completion: @escaping (Result) -> Void) {
+    func load(url: URL, completion: @escaping (Result) -> Void) {
         client.get(from: url, completion: { [weak self] result in
-            guard self != nil else { return }
+            guard let self = self else { return }
             switch result {
             case let .success((data, response)):
                 completion(RemoteWeatherLoader.map(data, from: response))
@@ -39,7 +37,7 @@ class RemoteWeatherLoader: WeatherLoader {
     private static func map(_ data: Data, from response: HTTPURLResponse) -> Result {
         do {
             let item = try RemoteItemMapper.map(data, from: response)
-            return .success(item.toModelsArray())
+            return .success(item.toModel())
         } catch {
             return .failure(error)
         }
@@ -47,7 +45,7 @@ class RemoteWeatherLoader: WeatherLoader {
 }
 
 private extension RemoteWeatherItem {
-     func toModelsArray() -> [WeatherItem] {
-         return [WeatherItem(city: city, temperature: temperature, unit: unit, date: date)]
+     func toModel() -> WeatherItem {
+         return WeatherItem(city: city, temperature: temperature, unit: unit, date: date)
     }
 }
