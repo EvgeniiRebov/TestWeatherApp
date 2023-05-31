@@ -16,10 +16,12 @@ protocol PresenterProtocol {
 class WeatherPresenter: PresenterProtocol {
     weak var view: ViewProtocol?
     let remoteLoader: RemoteLoader
+    var locationManager: Location
     var localLoader: WeatherLoader?
     
-    init(remoteLoader: RemoteLoader) {
+    init(remoteLoader: RemoteLoader, locationManager: Location) {
         self.remoteLoader = remoteLoader
+        self.locationManager = locationManager
     }
     
     func viewDidLoad() {
@@ -36,16 +38,26 @@ class WeatherPresenter: PresenterProtocol {
     }
 
     func requestWithLocation() {
-        guard let url = URLFactory.urlWithCoordinate(lat: "", lon: "") else {
-            view?.showAlert()
-            return
+        locationManager.getCurrentLocation() { [weak self] error in
+            if let error = error {
+                self?.view?.showAlert()//add error transition
+                print(error.localizedDescription)
+            }
         }
-        remoteLoader.load(url: url) { [weak self] result in
+        
+        locationManager.didUpdateLocation = { [weak self] location in
             guard let self = self else { return }
-            self.handleRemote(result)
+            guard let url = URLFactory.urlWithCoordinate(lat: String(location.coordinate.latitude),
+                                                         lon: String(location.coordinate.longitude)) else {
+                self.view?.showAlert()
+                return
+            }
+            self.remoteLoader.load(url: url) { result in
+                self.handleRemote(result)
+            }
         }
     }
-    
+
     func requestWith(cityName: String) {
         guard let url = URLFactory.urlWithCityName(cityName) else {
             view?.showAlert()

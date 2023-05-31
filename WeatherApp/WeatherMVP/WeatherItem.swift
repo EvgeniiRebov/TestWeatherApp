@@ -12,6 +12,7 @@ class WeatherItem {
     var temperature: Double
     var unit: String {
         didSet {
+            guard oldValue != unit else { return }
             if unit == "F" {
                 temperature = (temperature * 9/5) + 32
             } else {
@@ -19,6 +20,7 @@ class WeatherItem {
             }
         }
     }
+    
     var date: String
     
     init(city: String, temperature: Double, unit: String, date: String) {

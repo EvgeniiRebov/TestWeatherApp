@@ -10,7 +10,7 @@ import UIKit
 final class WeatherComposer {
     static func compose() -> UINavigationController {
         let remoteLoader = RemoteWeatherLoader(client: URLSessionHTTPClient())
-        let presenter = WeatherPresenter(remoteLoader: remoteLoader)
+        let presenter = WeatherPresenter(remoteLoader: remoteLoader, locationManager: LocationManager())
         let vc = WeatherViewController(presenter: presenter)
         presenter.view = vc
         vc.title = String.localize("Weather.Title")
