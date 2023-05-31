@@ -117,7 +117,7 @@ class RemoteWeatherLoaderUseCaseTests: XCTestCase {
         
     private func makeItem(city: String,
                           temperature: Double,
-                          unit: String = "F",
+                          unit: UnitType = .fahrenheit,
                           date: Date = Date()) -> (model: WeatherItem, json: [String: Any]) {
         let stringDate = DateFormatter.mainFormatter().string(from: date)
         let item = WeatherItem(city: city, temperature: temperature, unit: unit, date: stringDate)

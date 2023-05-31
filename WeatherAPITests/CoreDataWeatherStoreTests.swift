@@ -192,7 +192,7 @@ class CoreDataWeatherStoreTests: XCTestCase {
 }
 
 func uniqueWeather(in city: String) -> WeatherItem {
-    return WeatherItem(city: city, temperature: 24, unit: "F", date: "03.04.2023 12:43:24")
+    return WeatherItem(city: city, temperature: 24, unit: .fahrenheit, date: "03.04.2023 12:43:24")
 }
 
 func uniqueWeatherHistory() -> [LocalWeatherItem] {

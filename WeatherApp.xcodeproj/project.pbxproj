@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		600D474E2A27A28A00AAC267 /* UnitType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 600D474D2A27A28A00AAC267 /* UnitType.swift */; };
 		60356DA72A23E2CE00521ADA /* CoreDataHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60356DA62A23E2CE00521ADA /* CoreDataHelpers.swift */; };
 		60356DAA2A24FCEA00521ADA /* WeatherPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60356DA92A24FCEA00521ADA /* WeatherPresenter.swift */; };
 		60356DB02A2514AE00521ADA /* HistoryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60356DAF2A2514AE00521ADA /* HistoryCell.swift */; };
@@ -62,6 +63,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		600D474D2A27A28A00AAC267 /* UnitType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnitType.swift; sourceTree = "<group>"; };
 		60356DA62A23E2CE00521ADA /* CoreDataHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataHelpers.swift; sourceTree = "<group>"; };
 		60356DA92A24FCEA00521ADA /* WeatherPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherPresenter.swift; sourceTree = "<group>"; };
 		60356DAF2A2514AE00521ADA /* HistoryCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryCell.swift; sourceTree = "<group>"; };
@@ -218,6 +220,7 @@
 				60E7EBF82A1FA79300C8F53C /* AppDelegate.swift */,
 				60E7EBFA2A1FA79300C8F53C /* SceneDelegate.swift */,
 				60E7EC392A1FD16F00C8F53C /* WeatherLoader.swift */,
+				600D474D2A27A28A00AAC267 /* UnitType.swift */,
 				60356DA82A24FCCE00521ADA /* WeatherMVP */,
 				603AF0A22A2379A500A7E486 /* WeatherStore */,
 				60356DC72A268B8200521ADA /* LocationManager */,
@@ -426,6 +429,7 @@
 				60356DB02A2514AE00521ADA /* HistoryCell.swift in Sources */,
 				603AF0AC2A237DA400A7E486 /* WeatherStore.swift in Sources */,
 				60E7EBFB2A1FA79300C8F53C /* SceneDelegate.swift in Sources */,
+				600D474E2A27A28A00AAC267 /* UnitType.swift in Sources */,
 				60E7EC3C2A1FD1C700C8F53C /* WeatherItem.swift in Sources */,
 				60E7EC3A2A1FD16F00C8F53C /* WeatherLoader.swift in Sources */,
 				60E7EC382A1FD13000C8F53C /* RemoteWeatherLoader.swift in Sources */,

@@ -51,6 +51,6 @@ class RemoteWeatherLoader: RemoteLoader {
 
 private extension RemoteWeatherItem {
     func toModel(date: String) -> WeatherItem {
-        return WeatherItem(city: city, temperature: main.temp, unit: "F", date: date)
+        return WeatherItem(city: city, temperature: main.temp, unit: UnitUserDefaults.value(), date: date)
     }
 }

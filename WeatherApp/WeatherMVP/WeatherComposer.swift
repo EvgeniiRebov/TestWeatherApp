@@ -9,6 +9,7 @@ import UIKit
 
 final class WeatherComposer {
     static func compose() -> UINavigationController {
+        UnitUserDefaults.setValueIfNeeded()
         let remoteLoader = RemoteWeatherLoader(client: URLSessionHTTPClient())
         let presenter = WeatherPresenter(remoteLoader: remoteLoader, locationManager: LocationManager())
         let vc = WeatherViewController(presenter: presenter)

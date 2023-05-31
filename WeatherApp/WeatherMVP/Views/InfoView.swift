@@ -46,7 +46,7 @@ class InfoView: UIView {
     
     private var model: WeatherItem?
     
-    var changedUnit: ((String) -> Void)?
+    var changedUnit: (() -> Void)?
     
     init() {
         super.init(frame: .zero)
@@ -76,8 +76,8 @@ class InfoView: UIView {
     }
     
     @objc private func changeUnit() {
-        let newUnit = measureSwitch.isOn ? "C" : "F"
-        changedUnit?(newUnit)
+        UnitUserDefaults.setValue(measureSwitch.isOn ? UnitType.celsius.intValue : UnitType.fahrenheit.intValue)
+        changedUnit?()
     }
     
     func configure(_ model: WeatherItem?) {
@@ -85,23 +85,23 @@ class InfoView: UIView {
         self.model = model
         switchView.isHidden = false
         cityLabel.text = model.city
-        valueLabel.text = String(Int(model.temperature)) + "°" + model.unit
+        valueLabel.text = String(Int(model.temperature)) + "°" + model.unit.short
         backgroundColor = backgroudColorWith(model)
     }
     
     private func backgroudColorWith(_ model: WeatherItem) -> UIColor {
-        if model.unit == "F" {
+        if model.unit == .fahrenheit {
             measureSwitch.isOn = false
         } else {
             measureSwitch.isOn = true
         }
         
         switch (model.temperature, model.unit) {
-        case (..<10, "C"), (..<50, "F"):
+        case (..<10, .celsius), (..<50, .fahrenheit):
             return .lightBlue
-        case (..<25, "C"), (..<77, "F"):
+        case (..<25, .celsius), (..<77, .fahrenheit):
             return .orange
-        case (26..., "C"), (78..., "F"):
+        case (26..., .celsius), (78..., .fahrenheit):
             return .red
         default:
             return .white

@@ -57,8 +57,8 @@ class WeatherViewController: UIViewController, ViewProtocol {
         infoView.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
         infoView.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
         infoView.heightAnchor.constraint(equalToConstant: 150).isActive = true
-        infoView.changedUnit = { [weak self] newUnit in
-            self?.history.forEach { $0.unit = newUnit }
+        infoView.changedUnit = { [weak self]  in
+            self?.history.forEach { $0.unit = UnitUserDefaults.value() }
             self?.reloadData(self?.history ?? [])
         }
 

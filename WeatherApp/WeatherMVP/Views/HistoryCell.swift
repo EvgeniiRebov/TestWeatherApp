@@ -30,7 +30,7 @@ class HistoryCell: UITableViewCell {
     }
     
     func configure(_ model: WeatherItem) {
-        topLabel.text = model.city + " " + String(Int(model.temperature)) + "°" + model.unit
+        topLabel.text = model.city + " " + String(Int(model.temperature)) + "°" + model.unit.short
         bottomLabel.text = model.date
     }
 }

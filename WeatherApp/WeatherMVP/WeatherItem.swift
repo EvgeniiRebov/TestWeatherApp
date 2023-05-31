@@ -10,10 +10,10 @@ import Foundation
 class WeatherItem {
     var city: String
     var temperature: Double
-    var unit: String {
+    var unit: UnitType {
         didSet {
             guard oldValue != unit else { return }
-            if unit == "F" {
+            if unit == .fahrenheit {
                 temperature = (temperature * 9/5) + 32
             } else {
                 temperature = (temperature - 32) * 5/9
@@ -23,7 +23,7 @@ class WeatherItem {
     
     var date: String
     
-    init(city: String, temperature: Double, unit: String, date: String) {
+    init(city: String, temperature: Double, unit: UnitType, date: String) {
         self.city = city
         self.temperature = temperature
         self.unit = unit

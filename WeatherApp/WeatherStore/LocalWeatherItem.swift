@@ -10,6 +10,6 @@ import Foundation
 struct LocalWeatherItem: Equatable {
     var city: String
     var temperature: Double
-    var unit: String
+    var unit: UnitType
     var date: Date
 }
