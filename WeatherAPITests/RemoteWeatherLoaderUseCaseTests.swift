@@ -117,7 +117,7 @@ class RemoteWeatherLoaderUseCaseTests: XCTestCase {
         
     private func makeItem(city: String,
                           temperature: Double,
-                          unit: UnitType = .fahrenheit,
+                          unit: UnitType = UnitUserDefaults.value(),
                           date: Date = Date()) -> (model: WeatherItem, json: [String: Any]) {
         let stringDate = DateFormatter.mainFormatter().string(from: date)
         let item = WeatherItem(city: city, temperature: temperature, unit: unit, date: stringDate)
@@ -145,6 +145,9 @@ class RemoteWeatherLoaderUseCaseTests: XCTestCase {
         sut.load(url: url) { receivedResult in
             switch (receivedResult, expectedResult) {
             case let (.success(receivedItems), .success(expectedItems)):
+                print("RR", receivedItems.unit)
+                print("EE", expectedItems.unit)
+
                 XCTAssertEqual(receivedItems, expectedItems, file: file, line: line)
 
             case let (.failure(receivedError as RemoteWeatherLoader.NetworkError), .failure(expectedError as RemoteWeatherLoader.NetworkError)):

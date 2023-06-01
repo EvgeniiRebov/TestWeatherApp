@@ -11,5 +11,5 @@ struct LocalWeatherItem: Equatable {
     var city: String
     var temperature: Double
     var unit: UnitType
-    var date: Date
+    var date: String
 }

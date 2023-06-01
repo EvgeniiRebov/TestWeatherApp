@@ -12,12 +12,12 @@ class CoreDataWeatherStoreTests: XCTestCase {
     
     func test_retrieve_deliversEmptyOnEmptyCache() {
         let sut = makeSUT()
-        expect(sut, toRetrieve: .empty)
+        expect(sut, toRetrieve: .success(.none))
     }
     
     func test_retrieve_hasNoSideEffectsOnEmptyCache() {
         let sut = makeSUT()
-        expect(sut, toRetrieveTwice: .empty)
+        expect(sut, toRetrieveTwice: .success(.none))
     }
     
     func test_retrieve_deliversFoundValuesOnNonEmptyCache() {
@@ -26,7 +26,7 @@ class CoreDataWeatherStoreTests: XCTestCase {
         
         insert(history, to: sut)
         
-        expect(sut, toRetrieve: .found(weather: history))
+        expect(sut, toRetrieve: .success(history))
     }
     
     func test_retrieve_hasNoSideEffectsOnNonEmptyCache() {
@@ -35,7 +35,7 @@ class CoreDataWeatherStoreTests: XCTestCase {
         
         insert(history, to: sut)
         
-        expect(sut, toRetrieveTwice: .found(weather: history))
+        expect(sut, toRetrieveTwice: .success(history))
     }
     
     func test_insert_deliversNoErrorOnEmptyCache() {
@@ -64,7 +64,7 @@ class CoreDataWeatherStoreTests: XCTestCase {
         let latestHistory = uniqueWeatherHistory()
         insert(uniqueWeatherHistory(), to: sut)
         
-        expect(sut, toRetrieve: .found(weather: latestHistory))
+        expect(sut, toRetrieve: .success(latestHistory))
     }
 
     func test_delete_deliversNoErrorOnEmptyCache() {
@@ -80,7 +80,7 @@ class CoreDataWeatherStoreTests: XCTestCase {
 
         deleteCache(from: sut)
         
-        expect(sut, toRetrieve: .empty)
+        expect(sut, toRetrieve: .success(.none))
     }
 
     func test_delete_deliversNoErrorOnNonEmptyCache() {
@@ -98,7 +98,7 @@ class CoreDataWeatherStoreTests: XCTestCase {
         insert(uniqueWeatherHistory(), to: sut)
         deleteCache(from: sut)
         
-        expect(sut, toRetrieve: .empty)
+        expect(sut, toRetrieve: .success(.none))
     }
     
     func test_storeSideEffects_runSerially() {
@@ -143,8 +143,8 @@ class CoreDataWeatherStoreTests: XCTestCase {
     func insert(_ history: [LocalWeatherItem], to sut: WeatherStore) -> Error? {
         let exp = expectation(description: "Wait for cache insertion")
         var insertionError: Error?
-        sut.insert(history) { receivedInsertionError in
-            insertionError = receivedInsertionError
+        sut.insert(history) { result in
+            if case let Result.failure(error) = result { insertionError = error }
             exp.fulfill()
         }
         wait(for: [exp], timeout: 1.0)
@@ -155,29 +155,31 @@ class CoreDataWeatherStoreTests: XCTestCase {
     func deleteCache(from sut: WeatherStore) -> Error? {
         let exp = expectation(description: "Wait for cache deletion")
         var deletionError: Error?
-        sut.deleteCachedWeather() { receivedDeletionError in
-            deletionError = receivedDeletionError
+        sut.deleteCachedWeather() { result in
+            if case let Result.failure(error) = result { deletionError = error }
             exp.fulfill()
         }
         wait(for: [exp], timeout: 1.0)
         return deletionError
     }
     
-    func expect(_ sut: WeatherStore, toRetrieveTwice expectedResult: RetrieveCachedWeatherResult, file: StaticString = #file, line: UInt = #line) {
+    func expect(_ sut: WeatherStore, toRetrieveTwice expectedResult: WeatherStore.RetrievalResult,
+                file: StaticString = #file, line: UInt = #line) {
         expect(sut, toRetrieve: expectedResult, file: file, line: line)
         expect(sut, toRetrieve: expectedResult, file: file, line: line)
     }
     
-    func expect(_ sut: WeatherStore, toRetrieve expectedResult: RetrieveCachedWeatherResult, file: StaticString = #file, line: UInt = #line) {
+    func expect(_ sut: WeatherStore, toRetrieve expectedResult: WeatherStore.RetrievalResult,
+                file: StaticString = #file, line: UInt = #line) {
         let exp = expectation(description: "Wait for cache retrieval")
         
         sut.retrieve { retrievedResult in
             switch (expectedResult, retrievedResult) {
-            case (.empty, .empty),
+            case (.success(.none), .success(.none)),
                  (.failure, .failure):
                 break
                 
-            case let (.found(expected), .found(retrieved)):
+            case let (.success(.some(expected)), .success(.some(retrieved))):
                 XCTAssertEqual(retrieved, expected, file: file, line: line)
                 
             default:
@@ -200,6 +202,6 @@ func uniqueWeatherHistory() -> [LocalWeatherItem] {
     let local = models.map { LocalWeatherItem(city: $0.city,
                                               temperature: $0.temperature,
                                               unit: $0.unit,
-                                              date: DateFormatter.mainFormatter().date(from: $0.date) ?? Date()) }
+                                              date: $0.date) }
     return local
 }

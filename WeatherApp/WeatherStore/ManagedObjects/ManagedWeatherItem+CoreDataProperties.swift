@@ -17,7 +17,7 @@ extension ManagedWeatherItem {
     }
 
     @NSManaged public var city: String
-    @NSManaged public var date: Date
+    @NSManaged public var date: String
     @NSManaged public var temperature: Double
     @NSManaged public var unit: Int16
     
