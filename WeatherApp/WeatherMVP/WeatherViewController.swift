@@ -87,6 +87,7 @@ class WeatherViewController: UIViewController, ViewProtocol {
     
     func reloadData(_ newItem: WeatherItem) {
         history.insert(newItem, at: 0)
+        presenter.saveInLocal(history)
         infoView.configure(history.first)
         tableView.reloadData()
     }

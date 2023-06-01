@@ -11,21 +11,23 @@ protocol PresenterProtocol {
     func viewDidLoad()
     func requestWithLocation()
     func requestWith(cityName: String)
+    func saveInLocal(_ history: [WeatherItem])
 }
 
 class WeatherPresenter: PresenterProtocol {
     weak var view: ViewProtocol?
     let remoteLoader: RemoteLoader
+    let localLoader: LocalHitstoryLoader
     var locationManager: Location
-    var localLoader: WeatherLoader?
     
-    init(remoteLoader: RemoteLoader, locationManager: Location) {
+    init(remoteLoader: RemoteLoader, locationManager: Location, localLoader: LocalHitstoryLoader) {
         self.remoteLoader = remoteLoader
         self.locationManager = locationManager
+        self.localLoader = localLoader
     }
     
     func viewDidLoad() {
-        localLoader?.load(completion: { [weak self] result in
+        localLoader.load(completion: { [weak self] result in
             guard let self = self else { return }
             switch result {
             case let .success(history):
@@ -69,10 +71,21 @@ class WeatherPresenter: PresenterProtocol {
         }
     }
     
+    func saveInLocal(_ history: [WeatherItem]) {
+        localLoader.save(history) { [weak self] result in
+            switch result {
+            case .success():
+                break
+            case .failure(_):
+                self?.view?.showAlert() // показать алерт с дальнейшим вызовом reloadData
+            }
+        }
+    }
+    
     private func handleRemote(_ result: RemoteLoader.Result) {
         switch result {
         case let .success(model):
-            view?.reloadData(model)
+            self.view?.reloadData(model)
         case let .failure(error):
             print(error)
             self.view?.showAlert()
