@@ -80,6 +80,10 @@ private extension Array where Element == WeatherItem {
 
 private extension Array where Element == LocalWeatherItem {
     func toModels() -> [WeatherItem] {
-        return map { WeatherItem(city: $0.city, temperature: $0.temperature, unit: $0.unit, date: $0.date) }
+        return map { local in
+            let item = WeatherItem(city: local.city, temperature: local.temperature, unit: local.unit, date: local.date)
+            item.unit = UnitUserDefaults.value()
+            return item
+        }
     }
 }

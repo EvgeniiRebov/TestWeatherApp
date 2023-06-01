@@ -78,7 +78,7 @@ class RemoteWeatherLoaderUseCaseTests: XCTestCase {
     func test_load_deliversItemOn200HTTPResponseWithJSONItem() {
         let (sut, client) = makeSUT()
 
-        let item = makeItem(city: "Moscow", temperature: 25)
+        let item = makeItem(city: "Moscow")
 
 
         expect(sut, toCompleteWith: .success(item.model), when: {
@@ -116,11 +116,12 @@ class RemoteWeatherLoaderUseCaseTests: XCTestCase {
     }
         
     private func makeItem(city: String,
-                          temperature: Double,
-                          unit: UnitType = UnitUserDefaults.value(),
+                          temperature: Double = 25,
+                          unit: UnitType = .celsius,
                           date: Date = Date()) -> (model: WeatherItem, json: [String: Any]) {
         let stringDate = DateFormatter.mainFormatter().string(from: date)
         let item = WeatherItem(city: city, temperature: temperature, unit: unit, date: stringDate)
+        item.unit = UnitUserDefaults.value()
         
         let json = [
             "name": city,
