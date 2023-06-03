@@ -125,7 +125,7 @@ class RemoteWeatherLoaderUseCaseTests: XCTestCase {
         
         let json = [
             "name": city,
-            "main": ["temp": temperature]
+            "main": ["temp": item.temperature]
         ] as [String : Any]
         
         return (item, json)
@@ -146,8 +146,6 @@ class RemoteWeatherLoaderUseCaseTests: XCTestCase {
         sut.load(url: url) { receivedResult in
             switch (receivedResult, expectedResult) {
             case let (.success(receivedItems), .success(expectedItems)):
-                print("RR", receivedItems.unit)
-                print("EE", expectedItems.unit)
 
                 XCTAssertEqual(receivedItems, expectedItems, file: file, line: line)
 

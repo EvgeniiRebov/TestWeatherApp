@@ -24,24 +24,24 @@ class CoreDataWeatherStoreTests: XCTestCase {
         let sut = makeSUT()
         let history = uniqueWeatherHistory()
         
-        insert(history, to: sut)
+        insert(history.local, to: sut)
         
-        expect(sut, toRetrieve: .success(history))
+        expect(sut, toRetrieve: .success(history.local))
     }
     
     func test_retrieve_hasNoSideEffectsOnNonEmptyCache() {
         let sut = makeSUT()
         let history = uniqueWeatherHistory()
         
-        insert(history, to: sut)
+        insert(history.local, to: sut)
         
-        expect(sut, toRetrieveTwice: .success(history))
+        expect(sut, toRetrieveTwice: .success(history.local))
     }
     
     func test_insert_deliversNoErrorOnEmptyCache() {
         let sut = makeSUT()
 
-        let insertionError = insert(uniqueWeatherHistory(), to: sut)
+        let insertionError = insert(uniqueWeatherHistory().local, to: sut)
         
         XCTAssertNil(insertionError, "Expected to insert cache successfully")
     }
@@ -49,9 +49,9 @@ class CoreDataWeatherStoreTests: XCTestCase {
     func test_insert_deliversNoErrorOnNonEmptyCache() {
         let sut = makeSUT()
         
-        insert(uniqueWeatherHistory(), to: sut)
+        insert(uniqueWeatherHistory().local, to: sut)
         
-        let insertionError = insert(uniqueWeatherHistory(), to: sut)
+        let insertionError = insert(uniqueWeatherHistory().local, to: sut)
 
         XCTAssertNil(insertionError, "Expected to override cache successfully")
     }
@@ -59,12 +59,12 @@ class CoreDataWeatherStoreTests: XCTestCase {
     func test_insert_overridesPreviouslyInsertedCacheValues() {
         let sut = makeSUT()
 
-        insert(uniqueWeatherHistory(), to: sut)
+        insert(uniqueWeatherHistory().local, to: sut)
         
         let latestHistory = uniqueWeatherHistory()
-        insert(uniqueWeatherHistory(), to: sut)
+        insert(uniqueWeatherHistory().local, to: sut)
         
-        expect(sut, toRetrieve: .success(latestHistory))
+        expect(sut, toRetrieve: .success(latestHistory.local))
     }
 
     func test_delete_deliversNoErrorOnEmptyCache() {
@@ -86,7 +86,7 @@ class CoreDataWeatherStoreTests: XCTestCase {
     func test_delete_deliversNoErrorOnNonEmptyCache() {
         let sut = makeSUT()
 
-        insert(uniqueWeatherHistory(), to: sut)
+        insert(uniqueWeatherHistory().local, to: sut)
         let deletionError = deleteCache(from: sut)
         
         XCTAssertNil(deletionError, "Expected non-empty cache deletion to succeed")
@@ -95,7 +95,7 @@ class CoreDataWeatherStoreTests: XCTestCase {
     func test_delete_emptiesPreviouslyInsertedCache() {
         let sut = makeSUT()
 
-        insert(uniqueWeatherHistory(), to: sut)
+        insert(uniqueWeatherHistory().local, to: sut)
         deleteCache(from: sut)
         
         expect(sut, toRetrieve: .success(.none))
@@ -107,7 +107,7 @@ class CoreDataWeatherStoreTests: XCTestCase {
         var completedOperationsInOrder = [XCTestExpectation]()
         
         let op1 = expectation(description: "Operation 1")
-        sut.insert(uniqueWeatherHistory()) { _ in
+        sut.insert(uniqueWeatherHistory().local) { _ in
             completedOperationsInOrder.append(op1)
             op1.fulfill()
         }
@@ -119,7 +119,7 @@ class CoreDataWeatherStoreTests: XCTestCase {
         }
         
         let op3 = expectation(description: "Operation 3")
-        sut.insert(uniqueWeatherHistory()) { _ in
+        sut.insert(uniqueWeatherHistory().local) { _ in
             completedOperationsInOrder.append(op3)
             op3.fulfill()
         }
@@ -194,14 +194,16 @@ class CoreDataWeatherStoreTests: XCTestCase {
 }
 
 func uniqueWeather(in city: String) -> WeatherItem {
-    return WeatherItem(city: city, temperature: 24, unit: .fahrenheit, date: "03.04.2023 12:43:24")
+    let weather = WeatherItem(city: city, temperature: 24, unit: .celsius, date: "03.04.2023 12:43:24")
+    weather.unit = UnitUserDefaults.value()
+    return weather
 }
 
-func uniqueWeatherHistory() -> [LocalWeatherItem] {
+func uniqueWeatherHistory() -> (models: [WeatherItem], local: [LocalWeatherItem]) {
     let models = [uniqueWeather(in: "Moscow"), uniqueWeather(in: "SPb")]
     let local = models.map { LocalWeatherItem(city: $0.city,
                                               temperature: $0.temperature,
                                               unit: $0.unit,
                                               date: $0.date) }
-    return local
+    return (models, local)
 }

@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import CoreLocation
     
 protocol PresenterProtocol {
     func viewDidLoad()
@@ -18,9 +19,9 @@ class WeatherPresenter: PresenterProtocol {
     weak var view: ViewProtocol?
     let remoteLoader: RemoteLoader
     let localLoader: LocalHitstoryLoader
-    var locationManager: Location
+    var locationManager: LocationActions
     
-    init(remoteLoader: RemoteLoader, locationManager: Location, localLoader: LocalHitstoryLoader) {
+    init(remoteLoader: RemoteLoader, locationManager: LocationActions, localLoader: LocalHitstoryLoader) {
         self.remoteLoader = remoteLoader
         self.locationManager = locationManager
         self.localLoader = localLoader
@@ -40,14 +41,14 @@ class WeatherPresenter: PresenterProtocol {
     }
 
     func requestWithLocation() {
-        locationManager.getCurrentLocation() { [weak self] error in
+        locationManager.beginUpdatingLocation { [weak self] error in
             if let error = error {
                 self?.view?.showAlert()//add error transition
                 print(error.localizedDescription)
             }
         }
         
-        locationManager.didUpdateLocation = { [weak self] location in
+        locationManager.didReceiveLocation = { [weak self] location in
             guard let self = self else { return }
             guard let url = URLFactory.urlWithCoordinate(lat: String(location.coordinate.latitude),
                                                          lon: String(location.coordinate.longitude)) else {
@@ -57,6 +58,17 @@ class WeatherPresenter: PresenterProtocol {
             self.remoteLoader.load(url: url) { result in
                 self.handleRemote(result)
             }
+        }
+    }
+    
+    private func loadWithLocation(_ location: CLLocation) {
+        guard let url = URLFactory.urlWithCoordinate(lat: String(location.coordinate.latitude),
+                                                     lon: String(location.coordinate.longitude)) else {
+            view?.showAlert()
+            return
+        }
+        remoteLoader.load(url: url) { result in
+            self.handleRemote(result)
         }
     }
 

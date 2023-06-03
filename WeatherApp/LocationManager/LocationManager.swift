@@ -7,13 +7,13 @@
 
 import CoreLocation
 
-protocol Location {
-    func getCurrentLocation(handler: @escaping ((Error?) -> Void))
-    var didUpdateLocation: ((CLLocation) -> Void)? { get set }
+protocol LocationActions {
+    func beginUpdatingLocation(handler: @escaping ((Error?) -> Void))
+    var didReceiveLocation: ((CLLocation) -> Void)? { get set }
 }
 
-class LocationManager: NSObject, Location, CLLocationManagerDelegate {
-    private enum StatusError: Error {
+class LocationManager: NSObject, LocationActions, CLLocationManagerDelegate {
+    enum StatusError: Error {
         case denied
         case restricted
         case common
@@ -30,24 +30,26 @@ class LocationManager: NSObject, Location, CLLocationManagerDelegate {
         }
     }
                                             
-    private let locationManager = CLLocationManager()
-    var didUpdateLocation: ((CLLocation) -> Void)?
+    private var locationProvider: MainCLLocationManager
+        
+    var didReceiveLocation: ((CLLocation) -> Void)?
     
-    override init() {
+    init(_ locationProvider: MainCLLocationManager = MainCLLocationManager()) {
+        self.locationProvider = locationProvider
         super.init()
-        locationManager.delegate = self
-        locationManager.requestWhenInUseAuthorization()
+        self.locationProvider.delegate = self
+        self.locationProvider.requestWhenInUseAuthorization()
     }
 
-    func getCurrentLocation(handler: @escaping ((Error?) -> Void)) {
+    func beginUpdatingLocation(handler: @escaping ((Error?) -> Void)) {
         DispatchQueue.global().async {
             var error: Error?
-            if CLLocationManager.locationServicesEnabled() {
-                switch self.locationManager.authorizationStatus {
+            if self.locationProvider.isLocationServicesEnabled() {
+                switch self.locationProvider.authorizationStatus {
                 case .authorizedWhenInUse, .authorizedAlways:
-                    self.locationManager.startUpdatingLocation()
+                    self.locationProvider.startUpdatingLocation()
                 case .notDetermined:
-                    self.locationManager.requestWhenInUseAuthorization()
+                    self.locationProvider.requestWhenInUseAuthorization()
                 case .denied:
                     error = StatusError.denied
                 case .restricted:
@@ -66,7 +68,9 @@ class LocationManager: NSObject, Location, CLLocationManagerDelegate {
 
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         guard let location = locations.first else { return }
-        didUpdateLocation?(location)
-        locationManager.stopUpdatingLocation()
+        manager.stopUpdatingLocation()
+        DispatchQueue.main.async { [weak self] in
+            self?.didReceiveLocation?(location)
+        }
     }
 }
