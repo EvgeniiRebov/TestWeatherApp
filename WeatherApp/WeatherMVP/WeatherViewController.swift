@@ -98,6 +98,11 @@ class WeatherViewController: UIViewController, ViewProtocol {
     
     func showAlert(with error: Error) {
         receivedError = error
+        let alertController = UIAlertController(title: String.localize("CommonError.Title"), message: error.localizedDescription, preferredStyle: .alert)
+        let okAction = UIAlertAction(title: "OK", style: .default) { _ in }
+        alertController.addAction(okAction)
+        
+        present(alertController, animated: true)
     }
 }
 
