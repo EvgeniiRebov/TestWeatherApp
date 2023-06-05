@@ -9,6 +9,7 @@ import Foundation
 import CoreLocation
     
 protocol PresenterProtocol {
+    var view: ViewProtocol? { get set }
     func viewDidLoad()
     func requestWithLocation()
     func requestWith(cityName: String)

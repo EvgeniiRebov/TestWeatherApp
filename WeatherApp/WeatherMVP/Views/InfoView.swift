@@ -8,26 +8,26 @@
 import UIKit
 
 class InfoView: UIView {
-    private lazy var cityLabel: UILabel = {
+    private(set) lazy var cityLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 32, weight: .medium)
         return label
     }()
     
-    private lazy var valueLabel: UILabel = {
+    private(set) lazy var valueLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 24)
         return label
     }()
     
-    private lazy var measureSwitch: UISwitch = {
+    private(set) lazy var measureSwitch: UISwitch = {
         let measureSwitch = UISwitch()
         measureSwitch.isOn = false
         measureSwitch.addTarget(self, action: #selector(changeUnit), for: .valueChanged)
         return measureSwitch
     }()
     
-    private lazy var switchView: UIStackView = {
+    private(set) lazy var switchView: UIStackView = {
         let stack = UIStackView()
         let labelF = UILabel()
         labelF.text = "F"

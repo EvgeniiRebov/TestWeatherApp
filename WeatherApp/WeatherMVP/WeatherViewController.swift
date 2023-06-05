@@ -23,8 +23,8 @@ class WeatherViewController: UIViewController, ViewProtocol {
         return UIBarButtonItem(image: UIImage(systemName: "location.north.circle"),
                                style: .plain, target: self, action: #selector(requestWithLocation))
     }()
-    private let infoView = InfoView()
-    private let tableView = UITableView()
+    private(set) var infoView = InfoView()
+    private(set) var tableView = UITableView()
     private(set) var searchController = UISearchController(searchResultsController: nil)
     private(set) var history: [WeatherItem] = []
     private(set) var receivedError: Error?
@@ -55,6 +55,11 @@ class WeatherViewController: UIViewController, ViewProtocol {
     }
     
     private func setupSubviews() {
+        setupInfoView()
+        setupTableView()
+    }
+    
+    private func setupInfoView() {
         view.addSubview(infoView)
         infoView.translatesAutoresizingMaskIntoConstraints = false
         infoView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
@@ -65,7 +70,9 @@ class WeatherViewController: UIViewController, ViewProtocol {
             self?.history.forEach { $0.unit = UnitUserDefaults.value() }
             self?.reloadData(self?.history ?? [])
         }
-
+    }
+    
+    private func setupTableView() {
         view.addSubview(tableView)
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.topAnchor.constraint(equalTo: infoView.bottomAnchor).isActive = true
@@ -80,16 +87,19 @@ class WeatherViewController: UIViewController, ViewProtocol {
     }
     
     @objc private func requestWithLocation() {
+        (navigationController ?? self).startLoading()
         presenter.requestWithLocation()
     }
     
     func reloadData(_ history: [WeatherItem]) {
+        (navigationController ?? self).stopLoading()
         self.history = history
         infoView.configure(history.first)
         tableView.reloadData()
     }
     
     func reloadData(_ newItem: WeatherItem) {
+        (navigationController ?? self).stopLoading()
         history.insert(newItem, at: 0)
         presenter.saveInLocal(history)
         infoView.configure(history.first)
@@ -122,6 +132,7 @@ extension WeatherViewController: UITableViewDelegate, UITableViewDataSource {
 extension WeatherViewController: UISearchBarDelegate {
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         guard let text = searchBar.text else { return }
+        (navigationController ?? self).startLoading()
         presenter.requestWith(cityName: text)
     }
 }
