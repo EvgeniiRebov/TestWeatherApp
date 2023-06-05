@@ -11,10 +11,19 @@ class RemoteWeatherLoader: RemoteLoader {
     private let client: HTTPClient
     private let dateFormatter: DateFormatter
     
-    enum NetworkError: Error {
+    enum NetworkError: Error, LocalizedError {
         case invalidData
         case connectivity
         case unexpectedValues
+        
+        var errorDescription: String? {
+            switch self {
+            case .connectivity:
+                return String.localize("Network.Error.Connectivity")
+            case .unexpectedValues, .invalidData:
+                return String.localize("CommonError.Description")
+            }
+        }
     }
     
     typealias Result = RemoteLoader.Result

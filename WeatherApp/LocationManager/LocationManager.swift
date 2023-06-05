@@ -13,12 +13,12 @@ protocol LocationActions {
 }
 
 class LocationManager: NSObject, LocationActions, CLLocationManagerDelegate {
-    enum StatusError: Error {
+    enum StatusError: Error, LocalizedError {
         case denied
         case restricted
         case common
         
-        var localizedDescription: String {
+        var errorDescription: String? {
             switch self {
             case .denied:
                 return String.localize("Location.Error.Denied")

@@ -8,7 +8,10 @@
 
 "Weather.Title" = "Weather";
 "Search.Placeholder" = "City name";
-"Location.Error.Denied" = "Location permission denied. Change your settings to continue.";
-"Location.Error.Restricted" = "Location permission restricted. Change your settings to continue.";
-"Location.Error.Common" = "Location services not enabled. Change your settings to continue.";
+"Location.Error.Denied" = "Location permission denied. Change your settings to continue";
+"Location.Error.Restricted" = "Location permission restricted. Change your settings to continue";
+"Location.Error.Common" = "Location services not enabled. Change your settings to continue";
+"Error.DefaultTitle" = "Error";
+"Network.Error.Connectivity" = "Failed to get a response. Please try again later";
+"CommonError.Description" = "Something went wrong. Please try again later";
 // Add for Policy
