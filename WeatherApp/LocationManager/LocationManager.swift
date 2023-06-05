@@ -9,7 +9,7 @@ import CoreLocation
 
 protocol LocationActions {
     func beginUpdatingLocation(handler: @escaping ((Error?) -> Void))
-    var didReceiveLocation: ((CLLocation) -> Void)? { get set }
+    var didReceiveLocation: ((CLLocation?) -> Void)? { get set }
 }
 
 class LocationManager: NSObject, LocationActions, CLLocationManagerDelegate {
@@ -32,7 +32,7 @@ class LocationManager: NSObject, LocationActions, CLLocationManagerDelegate {
                                             
     private var locationProvider: MainCLLocationManager
         
-    var didReceiveLocation: ((CLLocation) -> Void)?
+    var didReceiveLocation: ((CLLocation?) -> Void)?
     
     init(_ locationProvider: MainCLLocationManager = MainCLLocationManager()) {
         self.locationProvider = locationProvider
@@ -67,10 +67,9 @@ class LocationManager: NSObject, LocationActions, CLLocationManagerDelegate {
     }
 
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        guard let location = locations.first else { return }
         manager.stopUpdatingLocation()
         DispatchQueue.main.async { [weak self] in
-            self?.didReceiveLocation?(location)
+            self?.didReceiveLocation?(locations.first)
         }
     }
 }

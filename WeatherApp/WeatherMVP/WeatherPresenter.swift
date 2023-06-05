@@ -35,36 +35,30 @@ class WeatherPresenter: PresenterProtocol {
                 self.view?.reloadData(history)
             case let .failure(error):
                 print(error)
-                self.view?.showAlert()
+                self.view?.showAlert(with: error)
             }
         })
     }
 
     func requestWithLocation() {
-        locationManager.beginUpdatingLocation { [weak self] error in
-            if let error = error {
-                self?.view?.showAlert()//add error transition
-                print(error.localizedDescription)
-            }
-        }
-        
         locationManager.didReceiveLocation = { [weak self] location in
             guard let self = self else { return }
-            guard let url = URLFactory.urlWithCoordinate(lat: String(location.coordinate.latitude),
-                                                         lon: String(location.coordinate.longitude)) else {
-                self.view?.showAlert()
-                return
-            }
-            self.remoteLoader.load(url: url) { result in
-                self.handleRemote(result)
+            self.loadWithLocation(location)
+        }
+        
+        locationManager.beginUpdatingLocation { [weak self] error in
+            if let error = error {
+                print(error.localizedDescription)
+                self?.view?.showAlert(with: error)
             }
         }
     }
     
-    private func loadWithLocation(_ location: CLLocation) {
-        guard let url = URLFactory.urlWithCoordinate(lat: String(location.coordinate.latitude),
+    private func loadWithLocation(_ location: CLLocation?) {
+        guard let location = location,
+              let url = URLFactory.url(lat: String(location.coordinate.latitude),
                                                      lon: String(location.coordinate.longitude)) else {
-            view?.showAlert()
+            view?.showAlert(with: RemoteWeatherLoader.NetworkError.unexpectedValues)
             return
         }
         remoteLoader.load(url: url) { result in
@@ -73,8 +67,8 @@ class WeatherPresenter: PresenterProtocol {
     }
 
     func requestWith(cityName: String) {
-        guard let url = URLFactory.urlWithCityName(cityName) else {
-            view?.showAlert()
+        guard let url = URLFactory.url(name: cityName) else {
+            view?.showAlert(with: RemoteWeatherLoader.NetworkError.unexpectedValues)
             return
         }
         remoteLoader.load(url: url) { [weak self] result in
@@ -88,8 +82,8 @@ class WeatherPresenter: PresenterProtocol {
             switch result {
             case .success():
                 break
-            case .failure(_):
-                self?.view?.showAlert() // показать алерт с дальнейшим вызовом reloadData
+            case let .failure(error):
+                self?.view?.showAlert(with: error) // сделать после алерта релоад
             }
         }
     }
@@ -100,7 +94,7 @@ class WeatherPresenter: PresenterProtocol {
             self.view?.reloadData(model)
         case let .failure(error):
             print(error)
-            self.view?.showAlert()
+            self.view?.showAlert(with: error)
         }
     }
 }

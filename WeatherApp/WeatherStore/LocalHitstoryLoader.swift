@@ -7,15 +7,31 @@
 
 import Foundation
 
-public final class LocalHitstoryLoader {
+class LocalHitstoryLoader: WeatherLoader {
     private let store: WeatherStore
     
     init(store: WeatherStore) {
         self.store = store
     }
-}
+    typealias LoadResult = WeatherLoader.Result
+    
+    func load(completion: @escaping (LoadResult) -> Void) {
+        store.retrieve {  result in
+            DispatchQueue.main.async {
+                switch result {
+                case let .failure(error):
+                    completion(.failure(error))
+                    
+                case let .success(.some(cache)):
+                    completion(.success(cache.toModels()))
+                    
+                case .success:
+                    completion(.success([]))
+                }
+            }
+        }
+    }
 
-extension LocalHitstoryLoader {
     typealias SaveResult = Result<Void, Error>
 
     func save(_ items: [WeatherItem], completion: @escaping (SaveResult) -> Void) {
@@ -45,29 +61,6 @@ extension LocalHitstoryLoader {
             guard self != nil else { return }
             
             completion(insertionResult)
-        }
-    }
-}
-
-extension LocalHitstoryLoader: WeatherLoader {
-    typealias LoadResult = WeatherLoader.Result
-
-    func load(completion: @escaping (LoadResult) -> Void) {
-        store.retrieve { [weak self] result in ///
-            DispatchQueue.main.async {
-                guard self != nil else { return }
-                
-                switch result {
-                case let .failure(error):
-                    completion(.failure(error))
-                    
-                case let .success(.some(cache)):
-                    completion(.success(cache.toModels()))
-                    
-                case .success:
-                    completion(.success([]))
-                }
-            }
         }
     }
 }

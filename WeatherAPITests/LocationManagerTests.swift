@@ -90,9 +90,9 @@ class LocationManagerTests: XCTestCase {
         let (manager, provider) = makeSUT()
         
         let location = CLLocation(latitude: 42.6, longitude: 14.9)
-        let mockHandler: ((CLLocation) -> Void) = { received in
-            XCTAssertEqual(received.coordinate.latitude, location.coordinate.latitude)
-            XCTAssertEqual(received.coordinate.longitude, location.coordinate.longitude)
+        let mockHandler: ((CLLocation?) -> Void) = { received in
+            XCTAssertEqual(received?.coordinate.latitude, location.coordinate.latitude)
+            XCTAssertEqual(received?.coordinate.longitude, location.coordinate.longitude)
         }
     
         manager.locationManager(provider, didUpdateLocations: [location])

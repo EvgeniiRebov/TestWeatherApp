@@ -11,7 +11,7 @@ final class CoreDataWeatherStore: WeatherStore {
     private let container: NSPersistentContainer
     private let context: NSManagedObjectContext
 
-    public init(storeURL: URL, bundle: Bundle = .main) throws {
+    init(storeURL: URL, bundle: Bundle = .main) throws {
         container = try NSPersistentContainer.load(modelName: "CDWeatherModel", url: storeURL, in: bundle)
         context = container.newBackgroundContext()
     }

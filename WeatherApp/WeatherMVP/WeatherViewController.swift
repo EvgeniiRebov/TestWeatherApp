@@ -10,7 +10,7 @@ import UIKit
 protocol ViewProtocol: AnyObject {
     func reloadData(_ history: [WeatherItem])
     func reloadData(_ newItem: WeatherItem)
-    func showAlert()
+    func showAlert(with error: Error)
 }
 
 class WeatherViewController: UIViewController, ViewProtocol {
@@ -19,10 +19,15 @@ class WeatherViewController: UIViewController, ViewProtocol {
     }
     
     private let presenter: PresenterProtocol
+    private(set) lazy var locationSearchButton: UIBarButtonItem = {
+        return UIBarButtonItem(image: UIImage(systemName: "location.north.circle"),
+                               style: .plain, target: self, action: #selector(requestWithLocation))
+    }()
     private let infoView = InfoView()
     private let tableView = UITableView()
-    private let searchController = UISearchController(searchResultsController: nil)
-    private var history: [WeatherItem] = []
+    private(set) var searchController = UISearchController(searchResultsController: nil)
+    private(set) var history: [WeatherItem] = []
+    private(set) var receivedError: Error?
     
     init(presenter: PresenterProtocol) {
         self.presenter = presenter
@@ -41,8 +46,7 @@ class WeatherViewController: UIViewController, ViewProtocol {
     }
     
     private func setupNavigation() {
-        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "location.north.circle"),
-                                                            style: .plain, target: self, action: #selector(requestWithLocation))
+        navigationItem.rightBarButtonItem = locationSearchButton
         navigationItem.searchController = searchController
         navigationItem.hidesSearchBarWhenScrolling = false
         searchController.searchBar.delegate = self
@@ -92,8 +96,8 @@ class WeatherViewController: UIViewController, ViewProtocol {
         tableView.reloadData()
     }
     
-    func showAlert() {
-        
+    func showAlert(with error: Error) {
+        receivedError = error
     }
 }
 

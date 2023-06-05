@@ -9,7 +9,9 @@ import Foundation
 
 enum URLFactory {
     private static let key = "872299f35680fe2abfbf46a4154275b5"
-    private static let baseUrl = "https://api.openweathermap.org/data/2.5/weather"
+    static let latName = "lat"
+    static let lonName = "lon"
+    static let cityName = "q"
     
     private static func commonQuery() -> [URLQueryItem] {
         return [
@@ -18,20 +20,20 @@ enum URLFactory {
         ]
     }
     
-    static func urlWithCityName(_ name: String) -> URL? {
+    static func url(baseUrl: String = "https://api.openweathermap.org/data/2.5/weather", name: String) -> URL? {
         var url = URLComponents(string: baseUrl)
         url?.queryItems = [
-            URLQueryItem(name: "q", value: name)
+            URLQueryItem(name: cityName, value: name)
         ]
         url?.queryItems?.append(contentsOf: commonQuery())
         return url?.url
     }
     
-    static func urlWithCoordinate(lat: String, lon: String) -> URL? {
+    static func url(baseUrl: String = "https://api.openweathermap.org/data/2.5/weather", lat: String, lon: String) -> URL? {
         var url = URLComponents(string: baseUrl)
         url?.queryItems = [
-            URLQueryItem(name: "lat", value: lat),
-            URLQueryItem(name: "lon", value: lon)
+            URLQueryItem(name: latName, value: lat),
+            URLQueryItem(name: lonName, value: lon)
         ]
         url?.queryItems?.append(contentsOf: commonQuery())
         return url?.url
