@@ -8,6 +8,8 @@
 import UIKit
 import CoreData
 
+// I think it's better do with reactive programing using MVVM, but I don't have enouth practise with it to make it good and fast, so I chose MVP with delegates and closures.
+
 final class WeatherComposer {
     
     static func compose(remoteLoader: RemoteLoader = RemoteWeatherLoader(client: URLSessionHTTPClient()),
