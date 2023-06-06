@@ -199,6 +199,42 @@
 			path = ManagedObjects;
 			sourceTree = "<group>";
 		};
+		60A474292A2F916600DD60A4 /* WeatherAPITests */ = {
+			isa = PBXGroup;
+			children = (
+				6083D3B62A224E06005FEC6E /* RemoteWeatherLoaderUseCaseTests.swift */,
+				603AF0A02A2291F900A7E486 /* URLSessionHTTPClientTests.swift */,
+			);
+			path = WeatherAPITests;
+			sourceTree = "<group>";
+		};
+		60A4742A2A2F918B00DD60A4 /* WeatherStoreTests */ = {
+			isa = PBXGroup;
+			children = (
+				60E3ED4E2A2A3D1700B1D3D6 /* LoadHistoryFromCacheUseCaseTests.swift */,
+				603AF0B22A237F5C00A7E486 /* CoreDataWeatherStoreTests.swift */,
+				60E3ED502A2A3F1D00B1D3D6 /* WeatherStoreSpy.swift */,
+			);
+			path = WeatherStoreTests;
+			sourceTree = "<group>";
+		};
+		60A4742B2A2F91C700DD60A4 /* LocationManagerTests */ = {
+			isa = PBXGroup;
+			children = (
+				60A474152A2BB25C00DD60A4 /* LocationManagerTests.swift */,
+			);
+			path = LocationManagerTests;
+			sourceTree = "<group>";
+		};
+		60A4742C2A2F91D300DD60A4 /* WeatherIntegrationTests */ = {
+			isa = PBXGroup;
+			children = (
+				60A4741B2A2C70DA00DD60A4 /* WeatherUIIntegrationTests.swift */,
+				60A4741E2A2E560600DD60A4 /* WeatherViewControllerTests.swift */,
+			);
+			path = WeatherIntegrationTests;
+			sourceTree = "<group>";
+		};
 		60E7EBEC2A1FA79300C8F53C = {
 			isa = PBXGroup;
 			children = (
@@ -223,7 +259,6 @@
 				60E7EBF82A1FA79300C8F53C /* AppDelegate.swift */,
 				60E7EBFA2A1FA79300C8F53C /* SceneDelegate.swift */,
 				60E7EC392A1FD16F00C8F53C /* WeatherLoader.swift */,
-				600D474D2A27A28A00AAC267 /* UnitType.swift */,
 				60356DA82A24FCCE00521ADA /* WeatherMVP */,
 				603AF0A22A2379A500A7E486 /* WeatherStore */,
 				60356DC72A268B8200521ADA /* LocationManager */,
@@ -236,15 +271,11 @@
 		60E7EC112A1FA79600C8F53C /* WeatherAPITests */ = {
 			isa = PBXGroup;
 			children = (
-				6083D3B62A224E06005FEC6E /* RemoteWeatherLoaderUseCaseTests.swift */,
-				603AF0A02A2291F900A7E486 /* URLSessionHTTPClientTests.swift */,
-				603AF0B22A237F5C00A7E486 /* CoreDataWeatherStoreTests.swift */,
-				60E3ED4E2A2A3D1700B1D3D6 /* LoadHistoryFromCacheUseCaseTests.swift */,
-				60E3ED502A2A3F1D00B1D3D6 /* WeatherStoreSpy.swift */,
 				60E3ED522A2A410100B1D3D6 /* TestHelperMethods.swift */,
-				60A474152A2BB25C00DD60A4 /* LocationManagerTests.swift */,
-				60A4741B2A2C70DA00DD60A4 /* WeatherUIIntegrationTests.swift */,
-				60A4741E2A2E560600DD60A4 /* WeatherViewControllerTests.swift */,
+				60A4742C2A2F91D300DD60A4 /* WeatherIntegrationTests */,
+				60A4742B2A2F91C700DD60A4 /* LocationManagerTests */,
+				60A4742A2A2F918B00DD60A4 /* WeatherStoreTests */,
+				60A474292A2F916600DD60A4 /* WeatherAPITests */,
 			);
 			path = WeatherAPITests;
 			sourceTree = "<group>";
@@ -253,6 +284,7 @@
 			isa = PBXGroup;
 			children = (
 				60356DBE2A2526BA00521ADA /* Extensions */,
+				600D474D2A27A28A00AAC267 /* UnitType.swift */,
 				60356DBA2A251B8B00521ADA /* Colors.swift */,
 				60E7EC042A1FA79500C8F53C /* Assets.xcassets */,
 				60E7EC062A1FA79500C8F53C /* LaunchScreen.storyboard */,
