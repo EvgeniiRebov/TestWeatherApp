@@ -1,0 +1,9 @@
+/* 
+  InfoPlist.strings
+  WeatherApp
+
+  Created by Evgenii Rebov on 06.06.2023.
+  
+*/
+NSLocationWhenInUseUsageDescription = "This is necessary to determine the weather at your location and collect analytics";
+NSLocationAlwaysAndWhenInUseUsageDescription = "This is necessary to determine the weather at your location and collect analytics";
